@@ -1,18 +1,46 @@
-import { Favourites } from "./AllCats";
 import "./Card.css";
+import { useState } from "react";
 
-interface CardProps{
-  onClick: Function;
-  cat:{
+interface CardProps {
+  userToken?: string,
+  cat: {
     id: string;
     width: number;
     height: number;
     url: string;
   };
-  favourites: Favourites;
 }
+export interface Favourites {
+  [catId: string]: boolean | undefined;
+}
+export default function Card({ cat, userToken }: CardProps) {
+  const [favourites, setFavourites] = useState<Favourites>({});
 
-export default function Card({onClick, cat, favourites}:CardProps) {
+  const onClick = (id: string) => {
+    const isFavourite = Boolean(favourites[id]);
+    if (isFavourite) {
+      fetch("http://cat-pinterest-api:3000/likes", {
+        method: "POST",
+        body: JSON.stringify({
+          cat_id: id,
+          created_at: new Date(),
+        }),
+      }).catch(function (error) {
+        console.log(error);
+      });
+    } else {
+      fetch("http://cat-pinterest-api:3000/likes/:like_id", {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + userToken,
+        },
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+    setFavourites({ ...favourites, [id]: !isFavourite });
+  };
+
   return (
     <div className="card" key={cat.id}>
       <img
