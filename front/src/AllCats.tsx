@@ -24,7 +24,7 @@ export default function AllCats() {
   useEffect(() => {
     fetch(url, {
       headers: {
-        "x-api-key": api_key,
+        "Authorization": "Bearer " + getToken(),
       },
     }).then((response) => {
       return response.json();
