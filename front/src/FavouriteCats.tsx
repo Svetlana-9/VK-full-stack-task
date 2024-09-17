@@ -1,23 +1,16 @@
 import Card from "./Card";
 import { Cat, FavouriteCat } from "./App";
 
-interface FavouriteCatsProps {
-  token: string;
-  cats: Cat[];
-  setCats: Function;
-  favouriteCats: FavouriteCat[];
-}
+export default function FavouriteCats(props: any) {
+    let favouriteCats = props.cats.filter((cat: Cat) => {
+        return props.favouriteCats.find((fav: FavouriteCat) => fav.cat_id === cat.id);
+    });
 
-export default function FavouriteCats(props: FavouriteCatsProps) {
-
-
-  return (
-    <>
-      <div className="cats">
-        {props.cats.map((cat) => (
-          <Card favouriteCats = {props.favouriteCats} cat={cat} key={cat.id} userToken={props.token} />
-        ))}
-      </div>
-    </>
-  );
+    return (
+        <div className="cats">
+            {favouriteCats.map((cat: Cat) => (
+                <Card cat={cat} key={cat.id} favouriteCats={props.favouriteCats} addFavouriteCat={props.addFavouriteCat} delFavouriteCat={props.delFavouriteCat} token={props.token}/>
+            ))}
+        </div>
+    );
 }
