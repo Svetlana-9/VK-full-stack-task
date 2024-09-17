@@ -1,21 +1,18 @@
-import "./AllCats.css";
-import { useEffect, useState } from 'react'
+import "./Cats.css";
+import { useEffect } from 'react'
 import Card from "./Card";
-
-interface Cat {
-  id: string;
-  url: string;
-  width: number;
-  height: number;
-  favourite?: boolean;
+import { Cat, FavouriteCat } from "./App";
+interface AllCatsProps {
+  token: string;
+  cats: Cat[];
+  setCats: Function;
+  favouriteCats: FavouriteCat[]
 }
+export default function AllCats(props: AllCatsProps) {
 
-export default function AllCats() {
-  const url = `https://api.thecatapi.com/v1/images/search?limit=20&order=ASC`;
+  const url = `https://api.thecatapi.com/v1/images/search?limit=40&order=ASC`;
   const api_key =
     "live_BKJPuclaQPqvtxkdFsFTuWLABQ8L7zu4HzoZPEIxBtCD75OZeSDLcuJudyqJepE1";
-
-  const [cats, setCats] = useState<Cat[]>([]);
 
   useEffect(() => {
     fetch(url, {
@@ -25,7 +22,7 @@ export default function AllCats() {
     }).then((response) => {
       return response.json();
     }).then((data) => {
-      setCats(data);
+      props.setCats(data);
     }).catch(function (error) {
       console.log(error);
     });
@@ -33,8 +30,8 @@ export default function AllCats() {
 
   return (
     <div className="cats">
-      {cats.map((cat) => (
-        <Card cat = {cat}/>
+      {props.cats.map((cat) => (
+        <Card  favouriteCats = {props.favouriteCats} userToken = {props.token} key={cat.id} cat = {cat}/>
       ))}
     </div>
   );

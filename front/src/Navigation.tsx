@@ -5,11 +5,11 @@ interface NavigationProps {
   onClick: Function
 }
 
-export default function Navigation ({onClick}: NavigationProps) {
+export default function Navigation (props: NavigationProps) {
   return (
     <div className='navigation'>
-      <Section onClick ={() => onClick ('allCats')} name = {'Все котики'} />
-      <Section onClick ={() => onClick ('favouriteCats')} name = {'Любимые котики'}/> 
+      <Section onClick ={() => props.onClick ('allCats')} name = {'Все котики'} />
+      <Section onClick ={() => props.onClick ('favouriteCats')} name = {'Любимые котики'}/> 
     </div>
   )
 }

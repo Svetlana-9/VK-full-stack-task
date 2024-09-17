@@ -1,41 +1,23 @@
-import { useState } from "react";
 import Card from "./Card";
+import { Cat, FavouriteCat } from "./App";
 
-export default function FavouriteCats() {
+interface FavouriteCatsProps {
+  token: string;
+  cats: Cat[];
+  setCats: Function;
+  favouriteCats: FavouriteCat[];
+}
 
-  const [userToken, setUserToken] = useState("");
-  fetch("http://cat-pinterest-api:3000/user", {
-    headers: {
-      "X-Auth-Token": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify({ login: "user", password: "sdsdsd7347adad" }),
-  })
-    .then((response) => setUserToken(response.headers.get("X-Auth-Token")))
-    .catch(function (error) {
-      console.log(error);
-    });
+export default function FavouriteCats(props: FavouriteCatsProps) {
 
-  const [cats, setCats] = useState([]);
-  fetch("http://cat-pinterest-api:3000/likes", {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userToken,
-    },
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => setCats(data))
-    .catch(function (error) {
-      console.log(error);
-    });
 
   return (
     <>
-      {cats.map((cat) => (
-        <Card cat={cat} userToken = {userToken}/>
-      ))}
+      <div className="cats">
+        {props.cats.map((cat) => (
+          <Card favouriteCats = {props.favouriteCats} cat={cat} key={cat.id} userToken={props.token} />
+        ))}
+      </div>
     </>
   );
 }

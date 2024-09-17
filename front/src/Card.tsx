@@ -1,57 +1,70 @@
 import "./Card.css";
-import { useState } from "react";
+// import { useState } from "react";
+import { FavouriteCat } from "./App";
 
 interface CardProps {
-  userToken?: string,
+  userToken?: string;
   cat: {
     id: string;
     width: number;
     height: number;
     url: string;
   };
+  favouriteCats: FavouriteCat[];
 }
 export interface Favourites {
   [catId: string]: boolean | undefined;
 }
-export default function Card({ cat, userToken }: CardProps) {
-  const [favourites, setFavourites] = useState<Favourites>({});
+export default function Card (props: CardProps) {
+  // const [favourites, setFavourites] = useState<Favourites>({});
 
   const onClick = (id: string) => {
-    const isFavourite = Boolean(favourites[id]);
+    const isFavourite = props.favouriteCats.filter((favouriteCat) => favouriteCat.cat_id == id).length;
     if (isFavourite) {
-      fetch("http://cat-pinterest-api:3000/likes", {
+      fetch("http://localhost:8080/api/likes", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + props.userToken,
+        },
         body: JSON.stringify({
           cat_id: id,
-          created_at: new Date(),
         }),
-      }).catch(function (error) {
-        console.log(error);
-      });
+      })
+        .then((response) => {
+          if (!response.ok) return Promise.reject(response.status);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     } else {
-      fetch("http://cat-pinterest-api:3000/likes/:like_id", {
+      fetch("http://localhost:8080/api/likes/" + id, {
         method: "DELETE",
         headers: {
-          Authorization: "Bearer " + userToken,
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + props.userToken,
         },
-      }).catch(function (error) {
-        console.log(error);
-      });
+      })
+        .then((response) => {
+          if (!response.ok) return Promise.reject(response.status);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
-    setFavourites({ ...favourites, [id]: !isFavourite });
+    // setFavourites({ ...favourites, [id]: !isFavourite });
   };
-
   return (
-    <div className="card" key={cat.id}>
+    <div className="card" key={props.cat.id}>
       <img
-        src={cat.url}
-        width={cat.width}
-        height={cat.height}
+        src={props.cat.url}
+        width={props.cat.width}
+        height={props.cat.height}
         className="card__image"
       />
       <div
-        className={`card__like ${favourites[cat.id] ? "_favourite" : ""}`}
-        onClick={() => onClick(cat.id)}
+        className={`card__like ${props.favouriteCats.filter((favouriteCat) => favouriteCat.cat_id == props.cat.id).length ? "_favourite" : ""}`}
+        onClick={() => onClick(props.cat.id)}
       />
     </div>
   );

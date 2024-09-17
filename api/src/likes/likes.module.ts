@@ -8,6 +8,6 @@ import { Like } from './entities/like.entity';
 @Module({
   controllers: [LikesController],
   providers: [LikesService],
-  imports: [TypeOrmModule.forFeature([Like]), UserModule]
+  imports: [TypeOrmModule.forFeature([Like]), UserModule],
 })
 export class LikesModule {}

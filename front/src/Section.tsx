@@ -4,10 +4,10 @@ interface SectionProps {
   onClick?: MouseEventHandler | undefined;
   name: string;
 }
-export default function Section ({onClick, name}: SectionProps) {
+export default function Section (props: SectionProps) {
   return (
-    <div className="section" onClick={onClick}>
-      <p>{name}</p>
+    <div className="section" onClick={props.onClick}>
+      <p>{props.name}</p>
     </div>
   );
 }
