@@ -12,7 +12,7 @@ export class LikesService {
 
   async addLike(user: number, createLikeDto: CreateLikeDto) {
     const res = await this.likesRepository.findOneBy({cat_id: createLikeDto.cat_id});
-    if (res)
+    if (!res)
     {
         const like: Like = new Like();
         like.user = user;
