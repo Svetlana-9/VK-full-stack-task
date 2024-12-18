@@ -19,7 +19,7 @@
 
 ## Backend
 
-API описан в файле openapi.yaml
+API описан в файле openapi.yaml.
 
 ## Реализация
 
